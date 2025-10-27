@@ -1,6 +1,7 @@
 {
   "name": "afkbot",
   "version": "1.0.0",
+<<<<<<< HEAD
   "description": "A Minecraft AFK bot with Discord integration for automated resource gathering",
   "main": "index.js",
   "scripts": {
@@ -21,12 +22,27 @@
   "dependencies": {
     "discord.js": "^14.24.0",
     "dotenv": "^17.2.3",
+=======
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "discord.js": "^14.24.0",
+>>>>>>> origin/main
     "express": "^5.1.0",
     "minecraft-data": "^3.99.1",
     "mineflayer": "^4.33.0",
     "mineflayer-pathfinder": "^2.4.5"
+<<<<<<< HEAD
   },
   "engines": {
     "node": ">=14.0.0"
+=======
+>>>>>>> origin/main
   }
 }

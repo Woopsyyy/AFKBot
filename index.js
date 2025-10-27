@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 require('dotenv').config();
+=======
+>>>>>>> origin/main
 const mineflayer = require('mineflayer');
 const Movements = require('mineflayer-pathfinder').Movements;
 const pathfinder = require('mineflayer-pathfinder').pathfinder;
@@ -15,9 +18,14 @@ app.get('/', (req, res) => {
   res.send('Bot has arrived');
 });
 
+<<<<<<< HEAD
 const PORT = process.env.EXPRESS_PORT || 8000;
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
+=======
+app.listen(8000, () => {
+  console.log('Server started');
+>>>>>>> origin/main
 });
 
 function createBot() {
@@ -25,9 +33,15 @@ function createBot() {
       username: config['bot-account']['username'],
       password: config['bot-account']['password'],
       auth: config['bot-account']['type'],
+<<<<<<< HEAD
       host: process.env.SERVER_IP || config.server.ip,
       port: parseInt(process.env.SERVER_PORT) || config.server.port,
       version: process.env.SERVER_VERSION || config.server.version,
+=======
+      host: config.server.ip,
+      port: config.server.port,
+      version: config.server.version,
+>>>>>>> origin/main
    });
 
    bot.loadPlugin(pathfinder);
@@ -51,7 +65,10 @@ function createBot() {
    let isInAfkPool = false;
    let activePotions = new Map(); // Track active potions and their expiration
 
+<<<<<<< HEAD
    // Bot state variables
+=======
+>>>>>>> origin/main
    let activeRequest = null; // Track active request timer
    let randomWalkInterval = null; // Interval for random walking
    let gatheringTravel = false; // Flag for gathering 200-block travel
@@ -61,6 +78,7 @@ function createBot() {
    let previousFood = 0;
    let justDied = false; // Flag to capture death message
    let lastSurfacePosition = null; // Remember last surface position for cave escape
+<<<<<<< HEAD
    let lastDeathReason = null; // Store last death reason
 
    // Helper function to check if player is online and get their position
@@ -108,6 +126,8 @@ function createBot() {
          return false;
       }
    }
+=======
+>>>>>>> origin/main
 
    function sendRegister(password) {
       return new Promise((resolve, reject) => {
@@ -155,6 +175,7 @@ function createBot() {
       });
    }
 
+<<<<<<< HEAD
    function sendDiscordWebhook(message, webhookType = 'general') {
       // Get webhook URL from config first, then environment variables as fallback
       let webhookUrl;
@@ -182,6 +203,9 @@ function createBot() {
          console.log(`[WARNING] Discord webhook not configured for type: ${webhookType}`);
          return;
       }
+=======
+   function sendDiscordWebhook(message, webhookUrl = 'https://discord.com/api/webhooks/1431906519078932541/UE8w6Qfnuyo4kL2PS5F3NHEmBTwO2X0hqFkYGKYDlppzU5eLf8arZHtTUweB0uEkSW20') {
+>>>>>>> origin/main
       const data = JSON.stringify({ content: message });
 
       const url = new URL(webhookUrl);
@@ -401,12 +425,15 @@ function createBot() {
 
    bot.once('spawn', () => {
       console.log('\x1b[33m[AfkBot] Bot joined the server', '\x1b[0m');
+<<<<<<< HEAD
       
       // Send join notification
       const now = new Date();
       const time24 = now.toTimeString().split(' ')[0];
       const date = now.toISOString().split('T')[0];
       sendDiscordWebhook(`🤖 **AFKBot Online**\n\n🕐 **${time24}** • ${date}\n\n✅ Bot has successfully joined the server!\n\n━━━━━━━━━━━━━━━━━━━━`, 'connection');
+=======
+>>>>>>> origin/main
 
       // If reconnected during active request, send restart message
       if (activeRequest) {
@@ -455,8 +482,13 @@ function createBot() {
                const now = new Date();
                const time24 = now.toTimeString().split(' ')[0];
                const date = now.toISOString().split('T')[0];
+<<<<<<< HEAD
                const message = `🕐 **${time24}** • ${date}\n\n🎒 **Inventory Update**\n\n➕ **Added:** \`${itemName}\` x${count}\n\n━━━━━━━━━━━━━━━━━━━━`;
                sendDiscordWebhook(message, 'inventory');
+=======
+               const message = `-----(${time24}) (${date})-----\n📦 **Inventory Update**\nAdded: ${itemName} ${count}\n--------------------------------------------------`;
+               sendDiscordWebhook(message, 'https://discord.com/api/webhooks/1431909754497925150/DUjL0tSOCd8uOcpFHiEc163wuQOJnXmDgaR2mjXRxkKbt5zROcZTT1ITR8smKstCkaBG');
+>>>>>>> origin/main
             }
          }
 
@@ -468,8 +500,13 @@ function createBot() {
                const now = new Date();
                const time24 = now.toTimeString().split(' ')[0];
                const date = now.toISOString().split('T')[0];
+<<<<<<< HEAD
                const message = `🕐 **${time24}** • ${date}\n\n🎒 **Inventory Update**\n\n➖ **Removed:** \`${itemName}\` x${count}\n\n━━━━━━━━━━━━━━━━━━━━`;
                sendDiscordWebhook(message, 'inventory');
+=======
+               const message = `-----(${time24}) (${date})-----\n📦 **Inventory Update**\nRemoved: ${itemName} ${count}\n--------------------------------------------------`;
+               sendDiscordWebhook(message, 'https://discord.com/api/webhooks/1431909754497925150/DUjL0tSOCd8uOcpFHiEc163wuQOJnXmDgaR2mjXRxkKbt5zROcZTT1ITR8smKstCkaBG');
+>>>>>>> origin/main
             }
          }
 
@@ -501,8 +538,13 @@ function createBot() {
                   const now = new Date();
                   const time24 = now.toTimeString().split(' ')[0];
                   const date = now.toISOString().split('T')[0];
+<<<<<<< HEAD
                   const message = `🕐 **${time24}** • ${date}\n\n🎒 **Inventory Update**\n\n➕ **Added:** \`${itemName}\` x${count}\n\n━━━━━━━━━━━━━━━━━━━━`;
                   sendDiscordWebhook(message, 'inventory');
+=======
+                  const message = `-----(${time24}) (${date})-----\n📦 **Inventory Update**\n➕ Added: ${itemName} ${count}\n--------------------------------------------------`;
+                  sendDiscordWebhook(message, 'https://discord.com/api/webhooks/1431909754497925150/DUjL0tSOCd8uOcpFHiEc163wuQOJnXmDgaR2mjXRxkKbt5zROcZTT1ITR8smKstCkaBG');
+>>>>>>> origin/main
                }
             }
          }
@@ -514,8 +556,13 @@ function createBot() {
                const now = new Date();
                const time24 = now.toTimeString().split(' ')[0];
                const date = now.toISOString().split('T')[0];
+<<<<<<< HEAD
                const message = `🕐 **${time24}** • ${date}\n\n🎒 **Inventory Update**\n\n➖ **Removed:** \`${itemName}\` x${count}\n\n━━━━━━━━━━━━━━━━━━━━`;
                sendDiscordWebhook(message, 'inventory');
+=======
+               const message = `-----(${time24}) (${date})-----\n📦 **Inventory Update**\n➖ Removed: ${itemName} ${count}\n--------------------------------------------------`;
+               sendDiscordWebhook(message, 'https://discord.com/api/webhooks/1431909754497925150/DUjL0tSOCd8uOcpFHiEc163wuQOJnXmDgaR2mjXRxkKbt5zROcZTT1ITR8smKstCkaBG');
+>>>>>>> origin/main
             }
          }
 
@@ -644,8 +691,13 @@ function createBot() {
          const now = new Date();
          const time24 = now.toTimeString().split(' ')[0]; // HH:MM:SS
          const date = now.toISOString().split('T')[0]; // YYYY-MM-DD
+<<<<<<< HEAD
          const message = `🕐 **${time24}** • ${date}\n\n❤️ **Health Status**\n\n🩺 **Health:** ${currentHealth}/20\n🍖 **Hunger:** ${currentFood}/20\n\n━━━━━━━━━━━━━━━━━━━━`;
          sendDiscordWebhook(message, 'health');
+=======
+         const message = `-----(${time24}) (${date})-----\nHealth: ${currentHealth}\nHunger: ${currentFood}\n-----------------------------------`;
+         sendDiscordWebhook(message, 'https://discord.com/api/webhooks/1431910449737240738/y-ng69ZsEC5arkWkNjgKAFBd631oHbANI0B5Xpei0Wfq9n5-I3Tw5mTTVioKHKOi3kr8');
+>>>>>>> origin/main
          previousHealth = currentHealth;
          previousFood = currentFood;
       }
@@ -667,7 +719,11 @@ function createBot() {
       justDied = true; // Set flag to capture death message
 
       // Send initial death notification
+<<<<<<< HEAD
       sendDiscordWebhook('💀 **AFKBot Death Alert**\n\n🤖 Bot has died and respawned!\n\n━━━━━━━━━━━━━━━━━━━━', 'death');
+=======
+      sendDiscordWebhook('💀 AFKBot died', 'https://discord.com/api/webhooks/1431908696082092172/11ZnlxYfXxj64gBhnQDQzbnki5JvkXryqfnSxJkIZ0zPAOMLO2miqPnyyZ89xczxxMxn');
+>>>>>>> origin/main
 
       // If bot died during a request, set flag to restart travel on respawn
       if (activeRequest) {
@@ -677,6 +733,7 @@ function createBot() {
       }
    });
 
+<<<<<<< HEAD
    bot.on('end', () => {
       const now = new Date();
       const time24 = now.toTimeString().split(' ')[0];
@@ -691,10 +748,22 @@ function createBot() {
    });
 
    bot.on('kicked', (reason) => {
+=======
+   if (config.utils['auto-reconnect']) {
+      bot.on('end', () => {
+         setTimeout(() => {
+            createBot();
+         }, config.utils['auto-recconect-delay']);
+      });
+   }
+
+   bot.on('kicked', (reason) =>
+>>>>>>> origin/main
       console.log(
          '\x1b[33m',
          `[AfkBot] Bot was kicked from the server. Reason: \n${reason}`,
          '\x1b[0m'
+<<<<<<< HEAD
       );
       
       const now = new Date();
@@ -702,6 +771,10 @@ function createBot() {
       const date = now.toISOString().split('T')[0];
       sendDiscordWebhook(`👢 **AFKBot Kicked**\n\n🕐 **${time24}** • ${date}\n\n⚠️ Bot was kicked from the server!\n\n📝 **Reason:** ${reason}\n\n🔄 Attempting to reconnect...\n\n━━━━━━━━━━━━━━━━━━━━`, 'connection');
    });
+=======
+      )
+   );
+>>>>>>> origin/main
 
    bot.on('error', (err) =>
       console.log(`\x1b[31m[ERROR] ${err.message}`, '\x1b[0m')
@@ -715,7 +788,11 @@ function createBot() {
          const deathMessage = message.toString();
          lastDeathReason = deathMessage;
          console.log(`[INFO] Death reason: ${deathMessage}`);
+<<<<<<< HEAD
          sendDiscordWebhook(`💀 **AFKBot Death Details**\n\n📝 **Death Reason:** ${deathMessage}\n\n🤖 Bot has been respawned!\n\n━━━━━━━━━━━━━━━━━━━━`, 'death');
+=======
+         sendDiscordWebhook(`💀 AFKBot died: ${deathMessage}`, 'https://discord.com/api/webhooks/1431908696082092172/11ZnlxYfXxj64gBhnQDQzbnki5JvkXryqfnSxJkIZ0zPAOMLO2miqPnyyZ89xczxxMxn');
+>>>>>>> origin/main
          justDied = false; // Reset flag
       }
 
@@ -728,9 +805,15 @@ function createBot() {
 
    bot.on('chat', (username, message) => {
       if (message === '!come') {
+<<<<<<< HEAD
          const playerInfo = getPlayerPosition(username);
          if (playerInfo.found) {
             const playerPos = playerInfo.position;
+=======
+         const player = bot.players[username];
+         if (player && player.entity) {
+            const playerPos = player.entity.position;
+>>>>>>> origin/main
             const playerUnderground = playerPos.y < 40;
             const botUnderground = isUnderground();
             if (!playerUnderground && botUnderground) {
@@ -786,7 +869,11 @@ function createBot() {
             const now = new Date();
             const time24 = now.toTimeString().split(' ')[0];
             const date = now.toISOString().split('T')[0];
+<<<<<<< HEAD
             const message = `🕐 **${time24}** • ${date}\n\n📦 **New Request Started**\n\n🎯 **Item:** \`${item}\`\n📊 **Stacks:** ${stacks}\n⏰ **Time:** ${totalTimeMinutes} minutes\n👤 **User:** ${username}\n\n━━━━━━━━━━━━━━━━━━━━`;
+=======
+            const message = `-----(${time24}) (${date})-----\n📦 **Request Started**\nItem: ${item}\nStacks: ${stacks}\nTime: ${totalTimeMinutes} minutes\nUser: ${username}\n--------------------------------------------------`;
+>>>>>>> origin/main
             sendDiscordWebhook(message);
             activeRequest = {
                item: item,
@@ -801,7 +888,11 @@ function createBot() {
             for (let i = 1; i <= progressIntervals; i++) {
                const interval = setTimeout(() => {
                   const remaining = totalTimeMinutes - i * 10;
+<<<<<<< HEAD
                   sendDiscordWebhook(`📦 **Request Progress**\n\n🎯 **Item:** \`${item}\`\n⏰ **Time Remaining:** ${remaining} minutes\n👤 **User:** ${username}\n\n━━━━━━━━━━━━━━━━━━━━`);
+=======
+                  sendDiscordWebhook(`ITEM: ${item}\nTIME: ${remaining} minutes\nUSER: ${username}`);
+>>>>>>> origin/main
                }, i * 600000); // 10 minutes * i
                activeRequest.intervals.push(interval);
             }
@@ -809,7 +900,11 @@ function createBot() {
             if (totalTimeMinutes > 5) {
                const nearlyDoneTime = (totalTimeMinutes - 5) * 60 * 1000;
                const nearlyDoneInterval = setTimeout(() => {
+<<<<<<< HEAD
                   sendDiscordWebhook(`📦 **Request Almost Done**\n\n🎯 **Item:** \`${item}\`\n⏰ **Status:** Nearly done, give me 5 minutes!\n👤 **User:** ${username}\n\n━━━━━━━━━━━━━━━━━━━━`);
+=======
+                  sendDiscordWebhook(`ITEM: ${item}\nTIME: nearly done, give me 5 minutes\nUSER: ${username}`);
+>>>>>>> origin/main
                }, nearlyDoneTime);
                activeRequest.intervals.push(nearlyDoneInterval);
             }
@@ -823,12 +918,17 @@ function createBot() {
                bot.chat('INVISIBLE: can\'t see me bitches');
                console.log('[BOT]: Sent invisibility message.');
             }, 10000); // 10 seconds
+<<<<<<< HEAD
             setTimeout(async () => {
+=======
+            setTimeout(() => {
+>>>>>>> origin/main
                if (randomWalkInterval) {
                   clearInterval(randomWalkInterval);
                   randomWalkInterval = null;
                   console.log(`[BOT]: Stopped random walk.`);
                }
+<<<<<<< HEAD
                
                // Give items to bot
                bot.chat(`/give @s ${item} ${amount}`);
@@ -858,6 +958,22 @@ function createBot() {
                bot.chat('kill me so the item will drop');
                console.log(`[BOT]: Sent kill message`);
                
+=======
+               bot.chat(`/give @s ${item} ${amount}`);
+               console.log(`[BOT]: Gave ${amount} ${item} to self.`);
+               // Now teleport to the player or spawn if not found
+               const player = bot.players[playerName];
+               if (player && player.entity) {
+                  console.log(`[BOT]: Using /tp ${playerName}`);
+                  bot.chat(`/tp ${playerName}`);
+                  console.log(`[BOT]: Teleported to ${playerName} and sent kill message.`);
+               } else {
+                  console.log(`[BOT]: Player ${playerName} not found, teleporting to spawn.`);
+                  bot.chat('/spawn');
+                  console.log(`[BOT]: Teleported to spawn and sent kill message.`);
+               }
+               bot.chat('kill me so the item will drop');
+>>>>>>> origin/main
                // Calculate distance traveled
                const endPosition = bot.entity.position;
                const distanceTraveled = Math.sqrt(
@@ -865,10 +981,16 @@ function createBot() {
                   Math.pow(endPosition.z - activeRequest.startPosition.z, 2)
                );
                console.log(`[BOT]: Request completed. Distance traveled: ${distanceTraveled.toFixed(2)} blocks.`);
+<<<<<<< HEAD
                
                // Clear intervals and send completion message
                activeRequest.intervals.forEach(clearTimeout);
                sendDiscordWebhook(`✅ **Request Completed!**\n\n🎯 **Item:** \`${item}\`\n📊 **Amount:** ${amount}\n👤 **Delivered to:** ${playerName}\n\n🤖 Bot has completed the gathering task!\n\n━━━━━━━━━━━━━━━━━━━━`);
+=======
+               // Clear intervals and send completion message
+               activeRequest.intervals.forEach(clearTimeout);
+               sendDiscordWebhook(`job done`);
+>>>>>>> origin/main
                activeRequest = null;
             }, totalTimeMs);
 } else if (parts.length === 2 && parts[1] === 'cancel') {
@@ -882,6 +1004,7 @@ function createBot() {
                   console.log(`[BOT]: Stopped random walk due to cancel.`);
                }
                // Send Discord message
+<<<<<<< HEAD
                sendDiscordWebhook(`❌ **Request Cancelled**\n\n👤 **Cancelled by:** ${username}\n\n🤖 Bot is returning to user...\n\n━━━━━━━━━━━━━━━━━━━━`);
                // Chat message
                bot.chat('Request cancelled.');
@@ -899,6 +1022,15 @@ function createBot() {
                   }
                })();
                
+=======
+               sendDiscordWebhook(`Request cancelled by ${username}`);
+               // Chat message
+               bot.chat('Request cancelled.');
+               console.log(`[BOT]: Request cancelled by ${username}.`);
+               // Teleport back to the user
+               bot.chat(`/tp ${username}`);
+               console.log(`[BOT]: Teleporting back to ${username} due to cancel.`);
+>>>>>>> origin/main
                // Reset activeRequest
                activeRequest = null;
             } else {
@@ -911,7 +1043,11 @@ function createBot() {
          if (message === '!setspawn') {
             bot.chat('/spawnpoint');
             bot.chat('Spawn set successfully!');
+<<<<<<< HEAD
             sendDiscordWebhook('🏠 **Spawn Point Updated**\n\n🤖 Bot spawn point has been set successfully!\n\n━━━━━━━━━━━━━━━━━━━━', 'spawn');
+=======
+            sendDiscordWebhook('Bot spawn set successfully!', 'https://discord.com/api/webhooks/1431908538162090087/R8gt7MFv66_nknp9ttQflKvqZJWg48g_6cyQPPNAMLQvRXdlUQm20FOqCZl-M2bz-UkT');
+>>>>>>> origin/main
          }
       }
    });

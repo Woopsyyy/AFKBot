@@ -1,4 +1,7 @@
 node_modules/
+<<<<<<< HEAD
 .env
 *.log
 .DS_Store
+=======
+>>>>>>> origin/main
