@@ -21,21 +21,44 @@ app.listen(PORT, () => {
 });
 
 function createBot() {
-   const bot = mineflayer.createBot({
-      username: config['bot-account']['username'],
-      password: config['bot-account']['password'],
-      auth: config['bot-account']['type'],
-      host: process.env.SERVER_IP || config.server.ip,
-      port: parseInt(process.env.SERVER_PORT) || config.server.port,
-      version: process.env.SERVER_VERSION || config.server.version,
-   });
+   // Determine connection settings based on local world support
+   let connectionSettings;
+   
+   if (config.features && config.features['local-world-support'] && config.features['local-world-support'].enabled) {
+      // Use local world settings
+      connectionSettings = {
+         username: config['bot-account']['username'],
+         password: config['bot-account']['password'],
+         auth: config['bot-account']['type'],
+         host: config.features['local-world-support']['local-ip'],
+         port: parseInt(config.features['local-world-support']['local-port']),
+         version: config.features['local-world-support']['local-version'],
+      };
+      console.log('\x1b[36m[AfkBot] Connecting to LOCAL WORLD:', connectionSettings.host + ':' + connectionSettings.port, '\x1b[0m');
+   } else {
+      // Use regular server settings
+      connectionSettings = {
+         username: config['bot-account']['username'],
+         password: config['bot-account']['password'],
+         auth: config['bot-account']['type'],
+         host: process.env.SERVER_IP || config.server.ip,
+         port: parseInt(process.env.SERVER_PORT) || config.server.port,
+         version: process.env.SERVER_VERSION || config.server.version,
+      };
+      console.log('\x1b[36m[AfkBot] Connecting to SERVER:', connectionSettings.host + ':' + connectionSettings.port, '\x1b[0m');
+   }
+
+   const bot = mineflayer.createBot(connectionSettings);
 
    bot.loadPlugin(pathfinder);
    const mcData = require('minecraft-data')(bot.version);
    const defaultMove = new Movements(bot, mcData);
    defaultMove.allowFreeMotion = true;
    defaultMove.canOpenDoors = true;
-   defaultMove.canDig = true; // Enable breaking blocks for faster paths (Baritone-style)
+   // Enable/disable block breaking based on configuration
+   const breakitemEnabled = config.features && config.features.breakitem !== false; // Default to true if not specified
+   defaultMove.canDig = breakitemEnabled;
+   console.log('\x1b[33m[AfkBot] Block breaking:', breakitemEnabled ? 'ENABLED' : 'DISABLED', '\x1b[0m');
    defaultMove.canPlaceOn = ['dirt', 'cobblestone', 'stone', 'planks', 'oak_planks', 'grass_block', 'sand', 'gravel', 'log', 'oak_log', 'spruce_log', 'birch_log', 'jungle_log', 'acacia_log', 'dark_oak_log']; // Allow placing blocks on common surfaces for bridging and building
    defaultMove.allow1by1towers = true; // Enable climbing stairs and uneven terrain
    defaultMove.scafoldingBlocks = ['dirt', 'cobblestone', 'stone', 'planks', 'oak_planks', 'carpet', 'white_carpet', 'orange_carpet', 'magenta_carpet', 'light_blue_carpet', 'yellow_carpet', 'lime_carpet', 'pink_carpet', 'gray_carpet', 'light_gray_carpet', 'cyan_carpet', 'purple_carpet', 'blue_carpet', 'brown_carpet', 'green_carpet', 'red_carpet', 'black_carpet', 'ladder', 'scaffolding', 'vine', 'iron_bars']; // Include climbing blocks like ladders, scaffolding, vines, and iron bars for faster vertical movement

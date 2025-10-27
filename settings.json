@@ -46,6 +46,16 @@
     "auto-recconect-delay": 5000
   },
 
+  "features": {
+    "breakitem": true,
+    "local-world-support": {
+      "enabled": false,
+      "local-ip": "localhost",
+      "local-port": 25565,
+      "local-version": "1.12.1"
+    }
+  },
+
   "discord": {
     "webhooks": {
       "general": "https://discord.com/api/webhooks/1431906519078932541/UE8w6Qfnuyo4kL2PS5F3NHEmBTwO2X0hqFkYGKYDlppzU5eLf8arZHtTUweB0uEkSW20",
