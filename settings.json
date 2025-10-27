@@ -1,0 +1,59 @@
+{
+  "bot-account": {
+    "username": "AFKBot", 
+    "password": "",
+    "type": "mojang"
+  },
+
+  "server": {
+    "ip": "STFU-V0SI.aternos.me", 
+    "port": 32288,   
+    "version": "1.12.1"   
+  },
+  
+  "position": {
+    "enabled": false,
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+
+  "utils": {
+    "auto-auth": {
+      "enabled": false,
+      "password": ""
+    },
+
+    "anti-afk": {
+      "enabled": true,
+      "sneak": true
+    },
+
+    "chat-messages": {
+      "enabled": true,
+      "repeat": true,
+      "repeat-delay": 600,
+
+      "messages": [
+        "Ughh fkk daddyy",
+        "Fkkkk me daddyy",
+        "I wont hide the flowers to you daddy"
+      ]
+    },
+
+    "chat-log": true,
+    "auto-reconnect": true,
+    "auto-recconect-delay": 5000
+  },
+
+  "discord": {
+    "webhooks": {
+      "general": "https://discord.com/api/webhooks/1431906519078932541/UE8w6Qfnuyo4kL2PS5F3NHEmBTwO2X0hqFkYGKYDlppzU5eLf8arZHtTUweB0uEkSW20",
+      "inventory": "https://discord.com/api/webhooks/1431909754497925150/DUjL0tSOCd8uOcpFHiEc163wuQOJnXmDgaR2mjXRxkKbt5zROcZTT1ITR8smKstCkaBG",
+      "health": "https://discord.com/api/webhooks/1431910449737240738/y-ng69ZsEC5arkWkNjgKAFBd631oHbANI0B5Xpei0Wfq9n5-I3Tw5mTTVioKHKOi3kr8",
+      "death": "https://discord.com/api/webhooks/1431908696082092172/11ZnlxYfXxj64gBhnQDQzbnki5JvkXryqfnSxJkIZ0zPAOMLO2miqPnyyZ89xczxxMxn",
+      "spawn": "https://discord.com/api/webhooks/1431908538162090087/R8gt7MFv66_nknp9ttQflKvqZJWg48g_6cyQPPNAMLQvRXdlUQm20FOqCZl-M2bz-UkT",
+      "connection": "https://discord.com/api/webhooks/1432282794381283379/vM1K6dJuqcYfObhS3AZ6tSbA3mIVf0s55gH8hgYYJPoyUNsaXYCWodqjio3TYiSfaDuJ"
+    }
+  }
+}
