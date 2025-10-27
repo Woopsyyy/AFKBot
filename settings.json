@@ -44,7 +44,6 @@
     "chat-log": true,
     "auto-reconnect": true,
     "auto-recconect-delay": 5000
-<<<<<<< HEAD
   },
 
   "discord": {
@@ -56,7 +55,5 @@
       "spawn": "https://discord.com/api/webhooks/1431908538162090087/R8gt7MFv66_nknp9ttQflKvqZJWg48g_6cyQPPNAMLQvRXdlUQm20FOqCZl-M2bz-UkT",
       "connection": "https://discord.com/api/webhooks/1432282794381283379/vM1K6dJuqcYfObhS3AZ6tSbA3mIVf0s55gH8hgYYJPoyUNsaXYCWodqjio3TYiSfaDuJ"
     }
-=======
->>>>>>> origin/main
   }
 }
