@@ -7,7 +7,7 @@ Welcome to **AfkBot**, a Node.js-based bot project for Minecraft and Discord int
 This repository has two main branches:
 
 - **`main`** - The stable, production-ready branch with all tested features
-- **`jaypee-update`** - The development branch for new features and updates
+- **`updates`** - The development branch for new features and updates
 
 ## Table of Contents
 - [Prerequisites](#prerequisites)
