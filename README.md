@@ -4,11 +4,10 @@ Welcome to **AfkBot**, a Node.js-based bot project for Minecraft and Discord int
 
 ## Repository Branches 🌿
 
-This repository has three main branches:
+This repository uses a protected main branch workflow:
 
-- **`main`** - The stable, production-ready branch with all tested features
-- **`jaypee-update`** - The development branch for new features and updates
-- **`shared-branch`** - The collaborative branch for two-person development
+- **`main`** - The protected production branch (requires Pull Request to merge)
+- **`updates`** - The development branch where you push your changes
 
 ## Table of Contents
 - [Prerequisites](#prerequisites)
@@ -90,216 +89,159 @@ You should see something like: `On branch main` and `nothing to commit, working 
 
 3. Test your changes locally if possible (e.g., run the bot with `node index.js`).
 
-## Branch Management for Collaborators 👥
+## Protected Branch Workflow for Collaborators 👥
 
-### For New Collaborators - Initial Setup
+### ⚠️ IMPORTANT: Main Branch is Protected!
 
-If you're a new collaborator, follow these steps to set up your local repository:
+The `main` branch is protected and requires Pull Requests. Always work on the `updates` branch.
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/Woopsyyy/AFKBot.git
-   cd AFKBot
-   ```
+### Step-by-Step Workflow
 
-2. **Switch to the development branch:**
-   ```bash
-   git checkout jaypee-update
-   ```
+#### 1. **Get Latest Updates (CRITICAL FIRST STEP)**
 
-3. **Set up tracking for the remote branch:**
-   ```bash
-   git branch --set-upstream-to=origin/jaypee-update jaypee-update
-   ```
+```bash
+# Fetch all latest changes from GitHub
+git fetch origin
 
-### For Existing Collaborators - Updating Your Repository
+# Switch to updates branch
+git checkout updates
 
-If you already have the repository cloned, follow these steps to update your `jaypee-update` branch:
+# Pull the latest changes to your local updates branch
+git pull origin updates
+```
 
-1. **Switch to the jaypee-update branch:**
-   ```bash
-   git checkout jaypee-update
-   ```
+#### 2. **Make Your Changes**
 
-2. **Fetch the latest changes from GitHub:**
-   ```bash
-   git fetch origin
-   ```
+```bash
+# Make your edits to files (index.js, settings.json, etc.)
+# Test your changes locally
+node .
+```
 
-3. **Update your local jaypee-update branch:**
-   ```bash
-   git pull origin jaypee-update
-   ```
+#### 3. **Commit Your Changes**
 
-4. **If you want to sync with the latest main branch changes:**
-   ```bash
-   git merge origin/main
-   ```
+```bash
+# Add all your changes
+git add .
 
-5. **Push your updated branch:**
-   ```bash
-   git push origin jaypee-update
-   ```
+# Commit with a descriptive message
+git commit -m "Add feature: [description of your changes]"
+```
 
-### Working on Features
+#### 4. **Push to Updates Branch**
 
-When working on new features:
+```bash
+# Push to the updates branch (NOT main!)
+git push origin updates
+```
 
-1. **Always work on the `jaypee-update` branch:**
-   ```bash
-   git checkout jaypee-update
-   ```
+#### 5. **Create Pull Request**
 
-2. **Make your changes and test them**
+1. Go to GitHub repository
+2. Click "Compare & pull request" 
+3. Set base: `main` ← compare: `updates`
+4. Add description and create PR
+5. Wait for review/approval to merge
 
-3. **Commit your changes:**
-   ```bash
-   git add .
-   git commit -m "Add feature: [description of your changes]"
-   ```
+### Complete Workflow Example
 
-4. **Push to the development branch:**
-   ```bash
-   git push origin jaypee-update
-   ```
+```bash
+# 1. Get latest updates
+git fetch origin
+git checkout updates
+git pull origin updates
 
-### Branch Workflow Summary
+# 2. Make your changes (edit files)
+# 3. Test your changes
+node .
 
-- **Development**: Work on `jaypee-update` branch
-- **Testing**: Test features on `jaypee-update` branch
-- **Production**: Stable code is merged to `main` branch
-- **Updates**: Always pull latest changes before starting work
+# 4. Commit changes
+git add .
+git commit -m "Add new feature: breakitem toggle"
 
-### For Two-Person Collaboration (shared-branch)
+# 5. Push to updates branch
+git push origin updates
 
-If you're working with another person on the same project:
+# 6. Create Pull Request on GitHub
+```
 
-1. **Switch to the shared branch:**
-   ```bash
-   git checkout shared-branch
-   ```
+### Safety Rules 🛡️
 
-2. **Pull latest changes from shared-branch:**
-   ```bash
-   git pull origin shared-branch
-   ```
-
-3. **Make your changes and test them**
-
-4. **Commit your changes:**
-   ```bash
-   git add .
-   git commit -m "Add feature: [description of your changes]"
-   ```
-
-5. **Push to the shared branch:**
-   ```bash
-   git push origin shared-branch
-   ```
-
-6. **Notify your collaborator** about the changes
-
-### Shared Branch Workflow Summary
-
-- **Collaboration**: Work on `shared-branch` for two-person development
-- **Communication**: Always notify your collaborator before pushing changes
-- **Sync**: Pull latest changes before starting work
-- **Merge**: Periodically merge stable features to `main` branch
+- **NEVER** push directly to `main` branch (it's protected)
+- **ALWAYS** work on `updates` branch
+- **ALWAYS** pull latest changes before starting work
+- **ALWAYS** test your changes before committing
+- **USE** descriptive commit messages
+- **CREATE** Pull Requests to merge changes to main
 
 ## Committing and Pushing Changes 📤
 
 Once you've made edits, follow these steps to upload them to GitHub:
 
-1. Check the status of your changes:
+1. **Switch to updates branch:**
+   ```bash
+   git checkout updates
+   ```
 
+2. **Check the status of your changes:**
    ```bash
    git status
    ```
 
-   This shows which files have been modified.
-
-2. Add your changes to the staging area:
-
+3. **Add your changes to the staging area:**
    ```bash
    git add .
    ```
 
-   Or add specific files: `git add index.js`
-
-3. Commit your changes with a descriptive message:
-
+4. **Commit your changes with a descriptive message:**
    ```bash
    git commit -m "Add feature: [brief description of changes]"
    ```
 
-4. Push your changes to GitHub:
-
+5. **Push your changes to the updates branch:**
    ```bash
-   git push origin main
+   git push origin updates
    ```
 
-   If it's your first push, you might need to set the upstream branch:
-
-   ```bash
-   git push -u origin main
-   ```
+6. **Create a Pull Request on GitHub to merge into main**
 
 ## Fetching the Latest Changes 📥
 
-### For jaypee-update branch (Development):
+### Always Get Latest Updates Before Working
 
-1. **Switch to the development branch:**
+**CRITICAL:** Always fetch the latest changes before making any modifications to avoid conflicts.
+
+```bash
+# Step 1: Fetch all latest changes from GitHub
+git fetch origin
+
+# Step 2: Switch to updates branch
+git checkout updates
+
+# Step 3: Pull the latest changes to your local updates branch
+git pull origin updates
+```
+
+### What This Does
+
+- **`git fetch origin`** - Downloads all the latest changes from GitHub
+- **`git checkout updates`** - Switches to the updates branch
+- **`git pull origin updates`** - Applies the latest changes to your local updates branch
+
+### If There Are Conflicts
+
+If you get merge conflicts when pulling:
+
+1. **Resolve conflicts** in your editor by choosing which changes to keep
+2. **Add the resolved files:**
    ```bash
-   git checkout jaypee-update
+   git add .
    ```
-
-2. **Fetch the latest changes:**
+3. **Commit the resolution:**
    ```bash
-   git fetch origin
+   git commit -m "Resolve merge conflicts"
    ```
-
-3. **Update your local jaypee-update branch:**
-   ```bash
-   git pull origin jaypee-update
-   ```
-
-### For main branch (Production):
-
-1. **Switch to the main branch:**
-   ```bash
-   git checkout main
-   ```
-
-2. **Fetch the latest changes:**
-   ```bash
-   git fetch origin
-   ```
-
-3. **Update your local main branch:**
-   ```bash
-   git pull origin main
-   ```
-
-### Syncing Between Branches:
-
-If you want to sync your `jaypee-update` branch with the latest `main` branch:
-
-1. **Switch to jaypee-update:**
-   ```bash
-   git checkout jaypee-update
-   ```
-
-2. **Fetch all branches:**
-   ```bash
-   git fetch origin
-   ```
-
-3. **Merge main into jaypee-update:**
-   ```bash
-   git merge origin/main
-   ```
-
-If there are conflicts, resolve them in your editor and commit the resolution.
+4. **Continue with your work**
 
 ## Troubleshooting 🛠️
 
@@ -309,13 +251,15 @@ If there are conflicts, resolve them in your editor and commit the resolution.
 - **Node Modules Issues**: Delete `node_modules` and run `npm install` again.
 - **Git Errors**: Check your Git configuration with `git config --list`.
 
-### Branch-Specific Issues:
+### Common Git Issues:
 
-- **Wrong Branch**: If you're on the wrong branch, use `git checkout jaypee-update` or `git checkout main`
-- **Branch Not Tracking Remote**: Use `git branch --set-upstream-to=origin/jaypee-update jaypee-update`
-- **Outdated Branch**: Always run `git fetch origin` before pulling changes
-- **Merge Conflicts Between Branches**: Resolve conflicts manually and commit the resolution
-- **Can't Push to Branch**: Make sure you're pushing to the correct branch: `git push origin jaypee-update`
+- **"Your branch is ahead"**: This means you have local commits that haven't been pushed. Run `git push origin updates`
+- **"Your branch is behind"**: This means there are new changes on GitHub. Run `git pull origin updates`
+- **"Merge conflicts"**: Resolve conflicts manually and commit the resolution
+- **"Nothing to commit"**: No changes detected. Make sure you've saved your files
+- **"Remote rejected"**: Someone else pushed changes. Pull first with `git pull origin updates`
+- **"Cannot push to main"**: Main branch is protected! Use `git push origin updates` instead
+- **"Branch not found"**: Create the updates branch with `git checkout -b updates`
 
 ## Contributing 🤝
 
