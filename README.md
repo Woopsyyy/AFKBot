@@ -4,10 +4,11 @@ Welcome to **AfkBot**, a Node.js-based bot project for Minecraft and Discord int
 
 ## Repository Branches 🌿
 
-This repository has two main branches:
+This repository has three main branches:
 
 - **`main`** - The stable, production-ready branch with all tested features
 - **`jaypee-update`** - The development branch for new features and updates
+- **`shared-branch`** - The collaborative branch for two-person development
 
 ## Table of Contents
 - [Prerequisites](#prerequisites)
@@ -70,7 +71,12 @@ You should see something like: `On branch main` and `nothing to commit, working 
 
    This will install all the required packages like `discord.js`, `mineflayer`, etc.
 
-2. (Optional) Configure settings: Check `settings.json` for any configuration options.
+2. Configure settings: Check `settings.json` for configuration options including:
+   - **Bot account settings** (username, password, auth type)
+   - **Server connection** (IP, port, version)
+   - **Feature toggles** (breakitem, local world support)
+   - **Discord webhooks** for notifications
+   - **Utility settings** (anti-AFK, chat messages, etc.)
 
 ## Making Edits ✏️
 
@@ -163,6 +169,42 @@ When working on new features:
 - **Testing**: Test features on `jaypee-update` branch
 - **Production**: Stable code is merged to `main` branch
 - **Updates**: Always pull latest changes before starting work
+
+### For Two-Person Collaboration (shared-branch)
+
+If you're working with another person on the same project:
+
+1. **Switch to the shared branch:**
+   ```bash
+   git checkout shared-branch
+   ```
+
+2. **Pull latest changes from shared-branch:**
+   ```bash
+   git pull origin shared-branch
+   ```
+
+3. **Make your changes and test them**
+
+4. **Commit your changes:**
+   ```bash
+   git add .
+   git commit -m "Add feature: [description of your changes]"
+   ```
+
+5. **Push to the shared branch:**
+   ```bash
+   git push origin shared-branch
+   ```
+
+6. **Notify your collaborator** about the changes
+
+### Shared Branch Workflow Summary
+
+- **Collaboration**: Work on `shared-branch` for two-person development
+- **Communication**: Always notify your collaborator before pushing changes
+- **Sync**: Pull latest changes before starting work
+- **Merge**: Periodically merge stable features to `main` branch
 
 ## Committing and Pushing Changes 📤
 
