@@ -5,6 +5,8 @@ const pathfinder = require('mineflayer-pathfinder').pathfinder;
 const { GoalBlock, GoalNear } = require('mineflayer-pathfinder').goals;
 const Vec3 = require('vec3');
 const https = require('https');
+const fs = require('fs');
+const path = require('path');
 
 const config = require('./settings.json');
 const express = require('express');
@@ -79,6 +81,168 @@ function createBot() {
    let randomWalkInterval = null; // Interval for random walking
    let gatheringTravel = false; // Flag for gathering 200-block travel
    let diedDuringRequest = false; // Flag if died during request
+
+   // Persistence functions for activeRequest
+   const requestStateFile = path.join(__dirname, 'activeRequest.json');
+   const ongoingRequestFile = path.join(__dirname, 'ongoingRequest.json');
+
+   function saveRequestState() {
+      if (activeRequest) {
+         const totalTimeMs = activeRequest.stacks * getTimePerStack(activeRequest.item) * 60 * 1000;
+         const elapsed = Date.now() - activeRequest.startTime;
+         const remainingMs = Math.max(0, totalTimeMs - elapsed);
+         const state = {
+            item: activeRequest.item,
+            stacks: activeRequest.stacks,
+            playerName: activeRequest.playerName,
+            startTime: activeRequest.startTime,
+            startPosition: activeRequest.startPosition,
+            remainingMs: remainingMs,
+            gatheringTravel: gatheringTravel
+         };
+         fs.writeFileSync(requestStateFile, JSON.stringify(state, null, 2));
+         console.log('[PERSISTENCE] Request state saved.');
+      }
+   }
+
+   function loadRequestState() {
+      try {
+         if (fs.existsSync(requestStateFile)) {
+            const data = fs.readFileSync(requestStateFile, 'utf8');
+            const state = JSON.parse(data);
+            activeRequest = {
+               item: state.item,
+               stacks: state.stacks,
+               playerName: state.playerName,
+               startTime: state.startTime,
+               startPosition: new Vec3(state.startPosition.x, state.startPosition.y, state.startPosition.z),
+               intervals: []
+            };
+            console.log('[PERSISTENCE] Request state loaded.');
+            return true;
+         }
+      } catch (error) {
+         console.log('[PERSISTENCE ERROR] Failed to load request state:', error.message);
+      }
+      return false;
+   }
+
+   function clearRequestState() {
+      if (fs.existsSync(requestStateFile)) {
+         fs.unlinkSync(requestStateFile);
+         console.log('[PERSISTENCE] Request state cleared.');
+      }
+   }
+
+   function createOngoingRequestFile() {
+      if (activeRequest) {
+         const totalTimeMs = activeRequest.stacks * getTimePerStack(activeRequest.item) * 60 * 1000;
+         const elapsed = Date.now() - activeRequest.startTime;
+         const remainingMs = Math.max(0, totalTimeMs - elapsed);
+         const reqData = {
+            item: activeRequest.item,
+            stacks: activeRequest.stacks,
+            playerName: activeRequest.playerName,
+            startTime: activeRequest.startTime,
+            startPosition: activeRequest.startPosition,
+            remainingMs: remainingMs
+         };
+         fs.writeFileSync(ongoingRequestFile, JSON.stringify(reqData, null, 2));
+         console.log('[ONGOING] Ongoing request file created.');
+      }
+   }
+
+   function deleteOngoingRequestFile() {
+      if (fs.existsSync(ongoingRequestFile)) {
+         fs.unlinkSync(ongoingRequestFile);
+         console.log('[ONGOING] Ongoing request file deleted.');
+      }
+   }
+
+   function loadOngoingRequest() {
+      try {
+         if (fs.existsSync(ongoingRequestFile)) {
+            const data = fs.readFileSync(ongoingRequestFile, 'utf8');
+            const req = JSON.parse(data);
+            activeRequest = {
+               item: req.item,
+               stacks: req.stacks,
+               playerName: req.playerName,
+               startTime: req.startTime,
+               startPosition: new Vec3(req.startPosition.x, req.startPosition.y, req.startPosition.z),
+               intervals: []
+            };
+            const remainingMs = req.remainingMs;
+            // Restart the request timer
+            setTimeout(async () => {
+               await completeRequest();
+            }, remainingMs);
+            deleteOngoingRequestFile();
+            console.log('[RESUME] Resumed ongoing request from file.');
+            return true;
+         }
+      } catch (error) {
+         console.log('[RESUME ERROR] Failed to resume ongoing request:', error.message);
+      }
+      return false;
+   }
+
+   async function completeRequest() {
+      if (!activeRequest) return; // Request was cancelled
+
+      console.log('[INFO] Request is still ongoing, proceeding to completion.');
+
+      if (randomWalkInterval) {
+         clearInterval(randomWalkInterval);
+         randomWalkInterval = null;
+         console.log(`[BOT]: Stopped random walk.`);
+      }
+
+      // Stop pathfinder to ensure teleport works
+      bot.pathfinder.stop();
+      console.log(`[BOT]: Stopped pathfinder for teleportation.`);
+
+      // Give items to bot
+      bot.chat(`/give @s ${activeRequest.item} ${activeRequest.stacks * 64}`);
+      console.log(`[BOT]: Gave ${activeRequest.stacks * 64} ${activeRequest.item} to self.`);
+
+      // Wait a moment for the give command to process
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Try to teleport to the player using helper function
+      const playerInfo = getPlayerPosition(activeRequest.playerName);
+      let teleportSuccess = false;
+
+      if (playerInfo.found) {
+         console.log(`[BOT]: Player ${activeRequest.playerName} found, attempting teleportation`);
+         teleportSuccess = await safeTeleport(`/tp ${activeRequest.playerName}`);
+      } else {
+         console.log(`[BOT]: Player ${activeRequest.playerName} not found online`);
+      }
+
+      // If teleportation to player failed or player not found, go to spawn
+      if (!teleportSuccess) {
+         console.log(`[BOT]: Going to spawn as fallback`);
+         await safeTeleport('/spawn');
+      }
+
+      // Now send kill message
+      bot.chat('kill me so the item will drop');
+      console.log(`[BOT]: Sent kill message`);
+      // Calculate distance traveled
+      const endPosition = bot.entity.position;
+      const distanceTraveled = Math.sqrt(
+         Math.pow(endPosition.x - activeRequest.startPosition.x, 2) +
+         Math.pow(endPosition.z - activeRequest.startPosition.z, 2)
+      );
+      console.log(`[BOT]: Request completed. Distance traveled: ${distanceTraveled.toFixed(2)} blocks.`);
+
+      // Clear intervals and send completion message
+      activeRequest.intervals.forEach(clearTimeout);
+      sendDiscordWebhook(`✅ **Request Completed!**\n\n🎯 **Item:** \`${activeRequest.item}\`\n📊 **Amount:** ${activeRequest.stacks * 64}\n👤 **Delivered to:** ${activeRequest.playerName}\n\n🤖 Bot has completed the gathering task!\n\n━━━━━━━━━━━━━━━━━━━━`);
+      activeRequest = null;
+      deleteOngoingRequestFile();
+   }
    let previousInventory = new Map(); // Track previous inventory for change detection
    let previousHealth = 0;
    let previousFood = 0;
@@ -424,7 +588,15 @@ function createBot() {
 
    bot.once('spawn', () => {
       console.log('\x1b[33m[AfkBot] Bot joined the server', '\x1b[0m');
-      
+
+      // Check for ongoing request to resume
+      loadOngoingRequest();
+
+      // Load persisted request state if no ongoing request was loaded
+      if (!activeRequest) {
+         loadRequestState();
+      }
+
       // Send join notification
       const now = new Date();
       const time24 = now.toTimeString().split(' ')[0];
@@ -840,61 +1012,54 @@ function createBot() {
             startGatheringTravel();
             // Apply invisibility effect after 10 seconds
             setTimeout(() => {
-               bot.chat('/effect give @s minecraft:invisibility 60 99 false');
+               bot.chat('/effect give @s minecraft:invisibility 999 99 false');
                bot.chat('/effect give @s minecraft:saturation infinite 99 true');
                console.log('[BOT]: Applied invisibility and saturation effects.');
                bot.chat('INVISIBLE: can\'t see me bitches');
                console.log('[BOT]: Sent invisibility message.');
             }, 10000); // 10 seconds
             setTimeout(async () => {
+               if (!activeRequest) return; // Request was cancelled
+
+               console.log('[INFO] Request is still ongoing, proceeding to completion.');
+
                if (randomWalkInterval) {
                   clearInterval(randomWalkInterval);
                   randomWalkInterval = null;
                   console.log(`[BOT]: Stopped random walk.`);
                }
-               
+
+               // Stop pathfinder to ensure teleport works
+               bot.pathfinder.stop();
+               console.log(`[BOT]: Stopped pathfinder for teleportation.`);
+
                // Give items to bot
                bot.chat(`/give @s ${item} ${amount}`);
                console.log(`[BOT]: Gave ${amount} ${item} to self.`);
-               
+
                // Wait a moment for the give command to process
                await new Promise(resolve => setTimeout(resolve, 1000));
-               
+
                // Try to teleport to the player using helper function
                const playerInfo = getPlayerPosition(playerName);
                let teleportSuccess = false;
-               
+
                if (playerInfo.found) {
                   console.log(`[BOT]: Player ${playerName} found, attempting teleportation`);
                   teleportSuccess = await safeTeleport(`/tp ${playerName}`);
                } else {
                   console.log(`[BOT]: Player ${playerName} not found online`);
                }
-               
+
                // If teleportation to player failed or player not found, go to spawn
                if (!teleportSuccess) {
                   console.log(`[BOT]: Going to spawn as fallback`);
                   await safeTeleport('/spawn');
                }
-               
+
                // Now send kill message
                bot.chat('kill me so the item will drop');
                console.log(`[BOT]: Sent kill message`);
-               
-               bot.chat(`/give @s ${item} ${amount}`);
-               console.log(`[BOT]: Gave ${amount} ${item} to self.`);
-               // Now teleport to the player or spawn if not found
-               const player = bot.players[playerName];
-               if (player && player.entity) {
-                  console.log(`[BOT]: Using /tp ${playerName}`);
-                  bot.chat(`/tp ${playerName}`);
-                  console.log(`[BOT]: Teleported to ${playerName} and sent kill message.`);
-               } else {
-                  console.log(`[BOT]: Player ${playerName} not found, teleporting to spawn.`);
-                  bot.chat('/spawn');
-                  console.log(`[BOT]: Teleported to spawn and sent kill message.`);
-               }
-               bot.chat('kill me so the item will drop');
                // Calculate distance traveled
                const endPosition = bot.entity.position;
                const distanceTraveled = Math.sqrt(
@@ -902,7 +1067,7 @@ function createBot() {
                   Math.pow(endPosition.z - activeRequest.startPosition.z, 2)
                );
                console.log(`[BOT]: Request completed. Distance traveled: ${distanceTraveled.toFixed(2)} blocks.`);
-               
+
                // Clear intervals and send completion message
                activeRequest.intervals.forEach(clearTimeout);
                sendDiscordWebhook(`✅ **Request Completed!**\n\n🎯 **Item:** \`${item}\`\n📊 **Amount:** ${amount}\n👤 **Delivered to:** ${playerName}\n\n🤖 Bot has completed the gathering task!\n\n━━━━━━━━━━━━━━━━━━━━`);
@@ -936,15 +1101,7 @@ function createBot() {
                   }
                })();
                
-               sendDiscordWebhook(`Request cancelled by ${username}`);
-               // Chat message
-               bot.chat('Request cancelled.');
-               console.log(`[BOT]: Request cancelled by ${username}.`);
-               // Teleport back to the user
-               bot.chat(`/tp ${username}`);
-               console.log(`[BOT]: Teleporting back to ${username} due to cancel.`);
                // Reset activeRequest
-               activeRequest = null;
             } else {
                bot.chat('No active request to cancel.');
             }
